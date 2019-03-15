@@ -15,17 +15,16 @@
 #include "llvm/IR/CFG.h"
 
 namespace llvm {
-    bool direction;
+    bool direction; //true for forwards, false for backwards
     BitVector<void*> domain;
+    bool meetOp;  //true for union, false for intersection
     //initial interior points
     //boundary positions
-    //meet operation
     //transfer function
 
 
 // Add definitions (and code, depending on your strategy) for your dataflow
 // abstraction here.
-
 }
 
 #endif
