@@ -25,7 +25,8 @@ namespace {
       
       // Here's some code to familarize you with the Expression
       // class and pretty printing code we've provided:
-      
+	DataFlow obj;
+  	obj.runPass(F);	
       vector<Expression> expressions;
       for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
 	BasicBlock* block = &*FI;

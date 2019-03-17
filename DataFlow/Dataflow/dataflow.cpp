@@ -5,7 +5,7 @@
 #include "dataflow.h"
 
 namespace llvm {
-  BitVector DataFlow::runMeetOp(vector<BitVector> bitVectors);
+  BitVector DataFlow::runMeetOp(std::vector<BitVector> bitVectors)
   {
     BitVector returnBV;
     for(int i=0;i<bitVectors.size();i++){
@@ -18,7 +18,6 @@ namespace llvm {
     }
     return returnBV;
   }
-  void DataFlow::runPass(){}
 
   // Add code for your dataflow abstraction here.
 }

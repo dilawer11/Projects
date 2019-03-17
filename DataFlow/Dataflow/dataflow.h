@@ -16,9 +16,9 @@
 
 namespace llvm {
     struct BasicBlockSt{
-        vector<BasicBlockSt*> prev;
+	std::vector<BasicBlock*> prev;
         BitVector in;
-        BitVector out=boundaryCondition;
+        BitVector out;
     };
     struct DFResult{
 
@@ -37,18 +37,18 @@ namespace llvm {
     std::map<BasicBlock*,BasicBlockSt> BlockMap;
 
     //methods
-    BitVector runMeetOp(vector<BitVector> bitVectors);
+    BitVector runMeetOp(std::vector<BitVector> bitVectors);
     void runPass(Function &F){
         //setup Prev List
         for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
 	        BasicBlock* block = &*FI;
             if(direction){
-                for(pred_iterator PI = pred_begin(BB); PI != pred_end(BB); ++PI){
-                    BlockMap[block].prev.push_back(*PI);
+                for(pred_iterator PI = pred_begin(block); PI != pred_end(block); ++PI){
+                   (BlockMap[block].prev).push_back(*PI);
                 }
             }
             else{
-                for(succ_iterator SI = succ_begin(BB); SI != succ_end(BB); ++SI){
+                for(succ_iterator SI = succ_begin(block); SI != succ_end(block); ++SI){
                     BlockMap[block].prev.push_back(*SI);
                 }
             }
@@ -56,9 +56,16 @@ namespace llvm {
         // for(std::map<BasicBlock*,BasicBlockSt::iterator it =BlockMap.begin();it!=BlockMap.end();++it){
         //     it->second.out=boundaryCondition;
         // }
+	outs () << "HERE I AM\n";
         for(std::map<BasicBlock*,BasicBlockSt>::iterator it = BlockMap.begin();it!=BlockMap.end();++it){
-            if(it->second.prev.size()==0){
-                it->second.prev.in=initialCondition;
+        outs() <<  it->second.prev.size() << " ";
+    	outs() << "\n";
+	for(int i=0;i<it->second.prev.size();i++){
+	    outs() << it->second.prev[i] << " ";
+	}
+	outs() << "\n";	
+	if(it->second.prev.size()==0){
+                (it->second).in=initialCondition;
                 outs() << "Found Initial Basic Block\n"; //Remove this later
             }
         }
