@@ -68,7 +68,7 @@ namespace llvm {
         else{
             for(Function::iterator FI = F.begin();FI!=F.end();++FI){
                 if(isa<ReturnInst>(FI->getTerminator())){
-                    initialBlock=*&(FI);
+                    initialBlock=&*FI;
                 }
             }
             //Remove
@@ -80,7 +80,7 @@ namespace llvm {
         outs() << "Setting out of all blocks"
         BlockMap[initialBlock].in=initialCondition;
         for(Function::iterator FI = F.begin(); FI != F.end();++FI){
-            BlockMap[FI].out=boundaryCondition;
+            BlockMap[&*FI].out=boundaryCondition;
         }
         runPassFunction(F);
         
@@ -102,14 +102,14 @@ namespace llvm {
             }
             for(Function::iterator FI = start; FI!=end; FI){//may need to code seperately for different directions
                 std::vector<BitVector> prevVectors;
-                for(int i=0;i<BlockMap[FI].prev.size();i++){
-                    prevVectors.push_back(BlockMap[FI].prev[i].out);
+                for(int i=0;i<BlockMap[&*FI].prev.size();i++){
+                    prevVectors.push_back(BlockMap[&*FI].prev[i].out);
                 }
                 BitVector input = runMeetOp(prevVectors);
-                if (input != BlockMap[FI].in){
-                    BitVector output = transferFunction(BlockMap[FI].in,FI); //change this according to transfer function
+                if (input != BlockMap[&*FI].in){
+                    BitVector output = transferFunction(BlockMap[&*FI].in,FI); //change this according to transfer function
                     valueChanged = true;
-                    BlockMap[FI].out=output;
+                    BlockMap[&*FI].out=output;
                 } 
                 if(direction){
                     ++FI;
