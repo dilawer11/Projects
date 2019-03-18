@@ -43,84 +43,9 @@ namespace llvm {
         return returnVal;
     }
     BitVector runMeetOp(std::vector<BitVector> bitVectors);
-    void runPassSetup(Function &F){
-        outs()  << "Setting up prev list\n";
-        for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
-	        BasicBlock* block = &*FI;
-            if(direction){
-                for(pred_iterator PI = pred_begin(block); PI != pred_end(block); ++PI){
-                   (BlockMap[block].prev).push_back(*PI);
-                }
-            }
-            else{
-                for(succ_iterator SI = succ_begin(block); SI != succ_end(block); ++SI){
-                    BlockMap[block].prev.push_back(*SI);
-                }
-            }
-            // BlockMap[]
-        }
-        
-	    outs () << "Setting in of initial block\n";
-        BasicBlock * initialBlock;
-        if(direction){
-            initialBlock=&(F.front());
-        }
-        else{
-            for(Function::iterator FI = F.begin();FI!=F.end();++FI){
-                if(isa<ReturnInst>(FI->getTerminator())){
-                    initialBlock=&*FI;
-                }
-            }
-            //Remove
-            if(initialBlock==&*F.end()){
-                outs()<< "SAME BLOCK AS END\n";
-            }
-            //Till here
-        }
-        outs() << "Setting out of all blocks";
-        BlockMap[initialBlock].in=initialCondition;
-        for(Function::iterator FI = F.begin(); FI != F.end();++FI){
-            BlockMap[&*FI].out=boundaryCondition;
-        }
-        runPassFunction(F);
-        
-
-    }
-    void runPassFunction(Function &F){
-        bool valueChanged = true;
-        while(valueChanged){
-            valueChanged = false;
-            Function::iterator start;
-            Function::iterator end;
-            if(direction){
-                start=F.begin();
-                end=F.end();
-            }
-            else{
-                start=F.end();
-                end=F.begin();
-            }
-            for(Function::iterator FI = start; FI!=end; FI){//may need to code seperately for different directions
-                std::vector<BitVector> prevVectors;
-                for(int i=0;i<BlockMap[&*FI].prev.size();i++){
-                    BasicBlock* block = BlockMap[&*FI].prev[i];	
-		    prevVectors.push_back(BlockMap[block].out);
-                }
-                BitVector input = runMeetOp(prevVectors);
-                if (input != BlockMap[&*FI].in){
-                    BitVector output = transferFunction(BlockMap[&*FI].in,&*FI); //change this according to transfer function
-                    valueChanged = true;
-                    BlockMap[&*FI].out=output;
-                } 
-                if(direction){
-                    ++FI;
-                } 
-                else{
-                    --FI;
-                } 
-            }
-        }
-    }
+    void runPassSetup(Function &F);
+    void runPassFunction(Function &F);
+    void printBitVector(BitVector toPrint);
 
 
     
