@@ -71,7 +71,7 @@ namespace llvm {
         }
         // BlockMap[]
     }
-    BasicBlock * start = &*(F.front());
+    BasicBlock * start = &(F.front());
     BasicBlock * end;
     for(Function::iterator FI = F.begin();FI!=F.end();++FI){
       if(isa<ReturnInst>(FI->getTerminator())){
@@ -81,6 +81,7 @@ namespace llvm {
     
   outs () << "Setting in of initial block\n";
     BasicBlock * initialBlock;
+    BasicBlock * endingBlock;
     if(direction){
       initialBlock=start;
       endingBlock=end;
@@ -110,8 +111,8 @@ namespace llvm {
           outs() << "0";
       }
     }
-    outs() << "\n");
-}
+    outs() << "\n";
+
   }
 
   // Add code for your dataflow abstraction here.
