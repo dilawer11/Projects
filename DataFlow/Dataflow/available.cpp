@@ -25,24 +25,24 @@ namespace {
       
       // Here's some code to familarize you with the Expression
       // class and pretty printing code we've provided:
-	DataFlow obj;
-  	obj.runPass(F);	
-      vector<Expression> expressions;
-      for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
-	BasicBlock* block = &*FI;
-	for (BasicBlock::iterator i = block->begin(), e = block->end(); i!=e; ++i) {
-	  Instruction* I = &*i;
-	  // We only care about available expressions for BinaryOperators
-	  if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
+	  DataFlow obj;
+    obj.runPassSetup(F);	
+    vector<Expression> expressions;
+    for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
+	    BasicBlock* block = &*FI;
+	    for (BasicBlock::iterator i = block->begin(), e = block->end(); i!=e; ++i) {
+	      Instruction* I = &*i;
+	      // We only care about available expressions for BinaryOperators
+	      if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
 	    // Create a new Expression to capture the RHS of the BinaryOperator
-	    expressions.push_back(Expression(BI));
-	  }
-	}
-      }
+	        expressions.push_back(Expression(BI));
+	      }
+	    }
+    }
       
-      // Print out the expressions used in the function
-      outs() << "Expressions used by this function:\n";
-      printSet(&expressions);
+    // Print out the expressions used in the function
+    outs() << "Expressions used by this function:\n";
+    printSet(&expressions);
       
       // Did not modify the incoming Function.
       return false;

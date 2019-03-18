@@ -16,12 +16,12 @@
 
 namespace llvm {
     struct BasicBlockSt{
-	std::vector<BasicBlock*> prev;
-        BitVector in;
-        BitVector out;
+	    std::vector<BasicBlock*> prev; //All the blocks previous in running of this type (succ in backwards, pred in forwards)
+        BitVector in;   //Input BitVector of the block (direction dependant)
+        BitVector out; //Output BitVector of the block (direction dependant)
     };
     struct DFResult{
-
+        //Fill in if necessary
     };
 
     class DataFlow{
@@ -30,16 +30,21 @@ namespace llvm {
     
     //variables
     bool direction; //true for forwards, false for backwards
-    std::vector<void*> rawDomain;
+    std::vector<void*> rawDomain; //pointers of domain
+    std::map<void*,int> domainIndex; //Index to BitVectors of the domains
     bool meetOp;  //true for union, false for intersection
     BitVector initialCondition;
     BitVector boundaryCondition;
     std::map<BasicBlock*,BasicBlockSt> BlockMap;
-
+    
     //methods
+    virtual BitVector transferFunction(BitVector input,BasicBlock* block){
+        BitVector returnVal;
+        return returnVal;
+    }
     BitVector runMeetOp(std::vector<BitVector> bitVectors);
-    void runPass(Function &F){
-        //setup Prev List
+    void runPassSetup(Function &F){
+        outs()  << "Setting up prev list\n";
         for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
 	        BasicBlock* block = &*FI;
             if(direction){
@@ -52,21 +57,66 @@ namespace llvm {
                     BlockMap[block].prev.push_back(*SI);
                 }
             }
+            // BlockMap[]
         }
-        // for(std::map<BasicBlock*,BasicBlockSt::iterator it =BlockMap.begin();it!=BlockMap.end();++it){
-        //     it->second.out=boundaryCondition;
-        // }
-	outs () << "HERE I AM\n";
-        for(std::map<BasicBlock*,BasicBlockSt>::iterator it = BlockMap.begin();it!=BlockMap.end();++it){
-        outs() <<  it->second.prev.size() << " ";
-    	outs() << "\n";
-	for(int i=0;i<it->second.prev.size();i++){
-	    outs() << it->second.prev[i] << " ";
-	}
-	outs() << "\n";	
-	if(it->second.prev.size()==0){
-                (it->second).in=initialCondition;
-                outs() << "Found Initial Basic Block\n"; //Remove this later
+        
+	    outs () << "Setting in of initial block\n";
+        BasicBlock * initialBlock;
+        if(direction){
+            initialBlock=(F.front());
+        }
+        else{
+            for(Function::iterator FI = F.begin();FI!=F.end();++FI){
+                if(isa<ReturnInst>(FI->getTerminator())){
+                    initialBlock=*&(FI);
+                }
+            }
+            //Remove
+            if(initialBlock==F.end()){
+                outs()<< "SAME BLOCK AS END\n";
+            }
+            //Till here
+        }
+        outs() << "Setting out of all blocks"
+        BlockMap[initialBlock].in=initialCondition;
+        for(Function::iterator FI = F.begin(); FI != F.end();++FI){
+            BlockMap[FI].out=boundaryCondition;
+        }
+        runPassFunction(F);
+        
+
+    }
+    void runPassFunction(Function &F){
+        bool valueChanged = true;
+        while(valueChanged){
+            valueChanged = false;
+            Function::iterator start;
+            Function::iterator end;
+            if(direction){
+                start=F.begin();
+                end=F.end();
+            }
+            else{
+                start=F.end();
+                end=F.begin();
+            }
+            for(Function::iterator FI = start; FI!=end; FI){//may need to code seperately for different directions
+                std::vector<BitVector> prevVectors;
+                for(int i=0;i<BlockMap[FI].prev.size();i++){
+                    prevVectors.push_back(BlockMap[FI].prev[i].out);
+                }
+                BitVector input = runMeetOp(prevVectors);
+                if (input != BlockMap[FI].in){
+                    BitVector output = transferFunction(BlockMap[FI].in,FI); //change this according to transfer function
+                    valueChanged = true;
+                    BlockMap[FI].out=output;
+                } 
+                if(direction){
+                    ++FI;
+                } 
+                else{
+                    --FI;
+                } 
             }
         }
     }
