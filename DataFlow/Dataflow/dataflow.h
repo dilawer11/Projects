@@ -8,6 +8,7 @@
 #include <iostream>
 #include <queue>
 #include <vector>
+#include <algorithm>
 #include "llvm/IR/Instructions.h"
 #include "llvm/ADT/BitVector.h"
 #include "llvm/ADT/DenseMap.h"
@@ -36,7 +37,9 @@ namespace llvm {
     BitVector initialCondition;
     BitVector boundaryCondition;
     std::map<BasicBlock*,BasicBlockSt> BlockMap;
-    
+    int bSize=0;
+    vector<BasicBlock*> blockOrdering;
+    DataFlow(bool,bool,BitVector,BitVector,std::vector<void*> domain);
     //methods
     virtual BitVector transferFunction(BitVector input,BasicBlock* block){
         BitVector returnVal;

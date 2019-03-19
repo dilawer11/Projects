@@ -5,6 +5,19 @@
 #include "dataflow.h"
 
 namespace llvm {
+  DataFlow::DataFlow(bool pDirection,bool pMeetOp,BitVector pInitCond,BitVector pBoundaryCondition,std::vector<void*> domain){
+    direction=pDirection;
+    meetOp=pMeetOp;
+    initialCondition=pInitCond;
+    boundaryCondition=pBoundaryCondition;
+    rawDomain=domain;
+    bSize=rawDomain.size();
+    //setup domain;
+    for(int i=0;i<bSize;i++){
+      domainIndex[rawDomain[i]]=i;
+    }
+    
+  }
   BitVector DataFlow::runMeetOp(std::vector<BitVector> bitVectors)
   {
     BitVector returnBV;
@@ -97,6 +110,26 @@ namespace llvm {
     }
     runPassFunction(F);
     printBitVector(BlockMap[endingBlock].out);
+    //Setting Block Ordering (TODO)
+    for (int i=0; i<blockOrdering.size(); ++i) {
+      outs() << "Turn Order : " << i << "\n";
+      BasicBlock* block = blockOrdering[i];
+      if(direction){
+        for(succ_iterator B = succ_begin(block); B != succ_end(block); ++B){
+          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)!=blockOrdering.end()){
+            block.push_back(&*B);
+          }
+        }
+      }
+      else{
+        for(pred_iterator B = pred_begin(block); B != pred_end(block); ++B){
+          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)!=blockOrdering.end()){
+            block.push_back(&*B);
+          }
+        }
+      }
+    }
+    
   }
   void DataFlow::printBitVector(BitVector toPrint){
     if(toPrint.size() == 0){
