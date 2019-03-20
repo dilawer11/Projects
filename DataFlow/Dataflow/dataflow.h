@@ -38,7 +38,7 @@ namespace llvm {
     BitVector boundaryCondition;
     std::map<BasicBlock*,BasicBlockSt> BlockMap;
     int bSize=0;
-    vector<BasicBlock*> blockOrdering;
+    std::vector<BasicBlock*> blockOrdering;
     DataFlow(bool,bool,BitVector,BitVector,std::vector<void*> domain);
     //methods
     virtual BitVector transferFunction(BitVector input,BasicBlock* block){

@@ -25,8 +25,6 @@ namespace {
       
       // Here's some code to familarize you with the Expression
       // class and pretty printing code we've provided:
-	  DataFlow obj;
-    obj.runPassSetup(F);	
     vector<Expression> expressions;
     for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
 	    BasicBlock* block = &*FI;
@@ -39,7 +37,13 @@ namespace {
 	      }
 	    }
     }
-      
+    BitVector temp(expressions.size(),0);
+    std::vector<void*> domain;
+    for(int i=0;i<expressions.size();i++){
+    	domain.push_back((void*)(&expressions[i]));
+    }
+    DataFlow obj(true,true,temp,temp,domain);
+    obj.runPassSetup(F);   
     // Print out the expressions used in the function
     outs() << "Expressions used by this function:\n";
     printSet(&expressions);

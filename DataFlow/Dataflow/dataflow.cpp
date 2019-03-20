@@ -117,14 +117,14 @@ namespace llvm {
       if(direction){
         for(succ_iterator B = succ_begin(block); B != succ_end(block); ++B){
           if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)!=blockOrdering.end()){
-            block.push_back(&*B);
+            blockOrdering.push_back(*B);
           }
         }
       }
       else{
         for(pred_iterator B = pred_begin(block); B != pred_end(block); ++B){
           if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)!=blockOrdering.end()){
-            block.push_back(&*B);
+            blockOrdering.push_back(*B);
           }
         }
       }
