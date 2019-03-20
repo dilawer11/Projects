@@ -53,7 +53,7 @@ namespace llvm {
             }
             BitVector input = runMeetOp(prevVectors);
             if (input != BlockMap[&*FI].in){
-              BitVector output = transferFunction(BlockMap[&*FI].in,&*FI); //change this according to transfer function
+              BitVector output = transferFunction(BlockMap[&*FI].in,&*FI,domainIndex,BlockMap); //change this according to transfer function
               valueChanged = true;
               BlockMap[&*FI].out=output;
             } 

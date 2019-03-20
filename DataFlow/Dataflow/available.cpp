@@ -14,6 +14,37 @@ using namespace llvm;
 using namespace std;
 
 namespace {
+  BitVector transferFunc(BitVector input,BasicBlock* block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
+        // printBitVector(input);
+        int sz=input.size();
+        BitVector gen(sz,false);
+        BitVector kill(sz,false);
+        BitVector out(sz,false);
+        for (BasicBlock::iterator i = block->begin(), e = block->end(); i!=e; ++i) {
+          Instruction* I = &*i;
+          // First calculating Generated defs
+          
+          if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
+              int ind=domainIndex[I];
+              if(input[ind]==0){
+                  gen[ind]=1;
+              }else if(input[ind]==1){
+                  kill[ind]=1;
+              }
+              // UNION
+              for(int x=0;x<out.size();x++){
+                  if(gen[x]==1 || input[x]==1){
+                      out[x]=1;
+                  }
+                  if(kill[x]==1){
+                      out[x]=0;
+                  }
+              }
+          }
+          // (Input_instructions /U/ (Generated)) //XOR (Killed)
+      }
+    return out;
+    }
   class AvailableExpressions : public FunctionPass {
     
   public:
@@ -21,11 +52,13 @@ namespace {
     
     AvailableExpressions() : FunctionPass(ID) { }
     
+    
     virtual bool runOnFunction(Function& F) {
       
       // Here's some code to familarize you with the Expression
       // class and pretty printing code we've provided:
-    vector<Expression> expressions;
+	  vector<Expression> expressions;
+    std::vector<void*> domain;
     for (Function::iterator FI = F.begin(), FE = F.end(); FI != FE; ++FI) {
 	    BasicBlock* block = &*FI;
 	    for (BasicBlock::iterator i = block->begin(), e = block->end(); i!=e; ++i) {
@@ -38,12 +71,18 @@ namespace {
 	    }
     }
     BitVector temp(expressions.size(),0);
-    std::vector<void*> domain;
     for(int i=0;i<expressions.size();i++){
-    	domain.push_back((void*)(&expressions[i]));
+      domain.push_back((void*)(&expressions[i]));
     }
-    DataFlow obj(true,true,temp,temp,domain);
-    obj.runPassSetup(F);   
+     
+    DataFlow obj(true,false,temp,temp,domain);
+    
+    obj.transferFunction=&transferFunc;
+    obj.runPassSetup(F);
+    outs()<<obj.blockOrdering.size()<<"\n";
+    for(int i=0;i<obj.blockOrdering.size();i++){
+      obj.printBitVector((obj.BlockMap[obj.blockOrdering[i]]).out);
+    }	 
     // Print out the expressions used in the function
     outs() << "Expressions used by this function:\n";
     printSet(&expressions);

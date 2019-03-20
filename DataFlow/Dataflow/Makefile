@@ -1,4 +1,4 @@
-all: liveness.so available.so
+all: available.so
 
 CXXFLAGS = -rdynamic $(shell llvm-config --cxxflags) -g -O0
 

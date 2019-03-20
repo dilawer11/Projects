@@ -14,7 +14,7 @@
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/IR/ValueMap.h"
 #include "llvm/IR/CFG.h"
-
+#include "llvm/Support/raw_ostream.h"
 namespace llvm {
     struct BasicBlockSt{
 	    std::vector<BasicBlock*> prev; //All the blocks previous in running of this type (succ in backwards, pred in forwards)
@@ -40,16 +40,19 @@ namespace llvm {
     int bSize=0;
     std::vector<BasicBlock*> blockOrdering;
     DataFlow(bool,bool,BitVector,BitVector,std::vector<void*> domain);
+    
+    BitVector (*transferFunction)(BitVector,BasicBlock* ,std::map<void*,int> ,std::map<BasicBlock*,BasicBlockSt>);
+
     //methods
-    virtual BitVector transferFunction(BitVector input,BasicBlock* block){
-        BitVector returnVal;
-        return returnVal;
-    }
+    // virtual BitVector transferFunction(BitVector input,BasicBlock* block){
+    //     BitVector returnVal;
+    //     return returnVal;
+    // }
     BitVector runMeetOp(std::vector<BitVector> bitVectors);
     void runPassSetup(Function &F);
     void runPassFunction(Function &F);
     void printBitVector(BitVector toPrint);
-
+    // virtual BitVector transferFunction(BitVector,BasicBlock* ,std::map<void*,int> ,std::map<BasicBlock*,BasicBlockSt>);
 
     
     };
