@@ -79,6 +79,7 @@ namespace {
     
     obj.transferFunction=&transferFunc;
     obj.runPassSetup(F);
+    outs() << "Back To Available\n";
     outs()<<obj.blockOrdering.size()<<"\n";
     for(int i=0;i<obj.blockOrdering.size();i++){
       obj.printBitVector((obj.BlockMap[obj.blockOrdering[i]]).out);

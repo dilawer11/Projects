@@ -35,37 +35,21 @@ namespace llvm {
     bool valueChanged = true;
     while(valueChanged){
         valueChanged = false;
-        Function::iterator start;
-        Function::iterator end;
-        if(direction){
-            start=F.begin();
-            end=F.end();
-        }
-        else{
-            start=F.end();
-            end=F.begin();
-        }
-        for(Function::iterator FI = start; FI!=end; FI){//may need to code seperately for different directions
+        for(int i = 0; i < blockOrdering.size(); i++){//may need to code seperately for different directions
             std::vector<BitVector> prevVectors;
-            for(int i=0;i<BlockMap[&*FI].prev.size();i++){
-              BasicBlock* block = BlockMap[&*FI].prev[i];	
+            for(int i=0;i<BlockMap[blockOrdering[i]].prev.size();i++){
+              BasicBlock* block = BlockMap[blockOrdering[i]].prev[i];	
               prevVectors.push_back(BlockMap[block].out);
             }
             BitVector input = runMeetOp(prevVectors);
-            if (input != BlockMap[&*FI].in){
-              BitVector output = transferFunction(BlockMap[&*FI].in,&*FI,domainIndex,BlockMap); //change this according to transfer function
+            if (input != BlockMap[blockOrdering[i]].in){
+              BitVector output = transferFunction(BlockMap[&*FI].in,blockOrdering[i],domainIndex,BlockMap); //change this according to transfer function
               valueChanged = true;
-              BlockMap[&*FI].out=output;
-            } 
-            if(direction){
-              ++FI;
-            } 
-            else{
-              --FI;
+              BlockMap[blockOrdering[i]].out=output;
             } 
         }
     }
-    outs() << "Done With Running Value Converged to\n";
+    
    
   }
   void DataFlow::runPassSetup(Function &F){
@@ -108,7 +92,7 @@ namespace llvm {
     for(Function::iterator FI = F.begin(); FI != F.end();++FI){
         BlockMap[&*FI].out=boundaryCondition;
     }
-    printBitVector(BlockMap[endingBlock].out);
+    
     //Setting Block Ordering (TODO)
     blockOrdering.push_back(initialBlock);
     for (int i=0; i<blockOrdering.size(); ++i) {
@@ -130,6 +114,8 @@ namespace llvm {
       }
     }
   runPassFunction(F); 
+  outs() << "Done With Running Value Converged to\n";
+  printBitVector(BlockMap[endingBlock].out);
   }
   void DataFlow::printBitVector(BitVector toPrint){
     if(toPrint.size() == 0){
