@@ -14,6 +14,46 @@ using namespace llvm;
 using namespace std;
 
 namespace {
+BitVector transferFunc(BitVector input,BasicBlock* block){
+        // printBitVector(input);
+	      // outs() << "Transfer Function Called\n";
+        int sz=input.size();
+        BitVector gen(sz,false);
+        BitVector kill(sz,false);
+        BitVector out(sz,false);
+        if(!block){
+          outs() << "ERR: NULL PTR TO BLOCK\n";
+          return out;
+        }
+        for (BasicBlock::iterator i = block->begin(), e = block->end(); i!=e; ++i) {
+          Instruction* I = &*i;
+          // First calculating Generated defs
+          
+          if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
+		          int ind=domainIndex[(void*)(&*(BI))];
+              if(input[ind]==0){
+                  gen[ind]=1;
+              }else if(input[ind]==1){
+                  kill[ind]=1;
+              }
+              // UNION
+              for(int x=0;x<out.size();x++){
+                  if(gen[x]==1 || input[x]==1){
+                      out[x]=1;
+                  }
+                  if(kill[x]==1){
+                      out[x]=0;
+                  }
+              }
+          }
+          // (Input_instructions /U/ (Generated)) //XOR (Killed)
+      }
+	// outs() << "Transfer Function Returned with output : \n";
+	// printBitVector(out);
+    return out;
+    }
+
+
   class AvailableExpressions : public FunctionPass {
     
   public:
@@ -43,9 +83,9 @@ namespace {
     BitVector temp(domain.size(),0);
      
     DataFlow obj(true,false,temp,temp,domain);
-    
+    obj.transferFunction = &transferFunc;  
     obj.runPassSetup(F);
-    outs() << "Back To Available\n";
+  
     outs()<<obj.blockOrdering.size()<<"\n";
     for(int i=0;i<obj.blockOrdering.size();i++){
       printBitVector((obj.BlockMap[obj.blockOrdering[i]]).out);
