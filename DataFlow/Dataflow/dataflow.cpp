@@ -108,28 +108,28 @@ namespace llvm {
     for(Function::iterator FI = F.begin(); FI != F.end();++FI){
         BlockMap[&*FI].out=boundaryCondition;
     }
-    runPassFunction(F);
     printBitVector(BlockMap[endingBlock].out);
     //Setting Block Ordering (TODO)
+    blockOrdering.push_back(initialBlock);
     for (int i=0; i<blockOrdering.size(); ++i) {
       outs() << "Turn Order : " << i << "\n";
       BasicBlock* block = blockOrdering[i];
       if(direction){
         for(succ_iterator B = succ_begin(block); B != succ_end(block); ++B){
-          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)!=blockOrdering.end()){
+          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)==blockOrdering.end()){
             blockOrdering.push_back(*B);
           }
         }
       }
       else{
         for(pred_iterator B = pred_begin(block); B != pred_end(block); ++B){
-          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)!=blockOrdering.end()){
+          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)==blockOrdering.end()){
             blockOrdering.push_back(*B);
           }
         }
       }
     }
-    
+  runPassFunction(F); 
   }
   void DataFlow::printBitVector(BitVector toPrint){
     if(toPrint.size() == 0){
