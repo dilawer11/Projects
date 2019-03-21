@@ -18,19 +18,22 @@ namespace llvm {
     }
     
   }
-    BitVector DataFlow::transferFunction(BitVector input,BasicBlock* block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
+    BitVector DataFlow::transferFunction(BitVector input,BasicBlock* block){
         // printBitVector(input);
 	      outs() << "Transfer Function Called\n";
         int sz=input.size();
         BitVector gen(sz,false);
         BitVector kill(sz,false);
         BitVector out(sz,false);
+	if(block==NULL){
+		outs() << "NULL BLOCK\n";
+	}
         for (BasicBlock::iterator i = block->begin(), e = block->end(); i!=e; ++i) {
           Instruction* I = &*i;
           // First calculating Generated defs
           
           if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
-              int ind=domainIndex[I];
+		  int ind=domainIndex[(void*)(&*(BI))];
               if(input[ind]==0){
                   gen[ind]=1;
               }else if(input[ind]==1){
@@ -48,11 +51,13 @@ namespace llvm {
           }
           // (Input_instructions /U/ (Generated)) //XOR (Killed)
       }
+	outs() << "Transfer Function Returned with output : \n";
+	printBitVector(out);
     return out;
     }
   BitVector DataFlow::runMeetOp(std::vector<BitVector> bitVectors)
   {
-    BitVector returnBV;
+    BitVector returnBV=bitVectors[0];
     for(int i=0;i<bitVectors.size();i++){
         if(meetOp){
             returnBV |=bitVectors[i];
@@ -65,19 +70,26 @@ namespace llvm {
   }
   void DataFlow::runPassFunction(Function &F){
     bool valueChanged = true;
-    int interationCount =1;
+    int iterationCount =1;
     while(valueChanged){
         valueChanged = false;
         outs() << "Iteration : " << iterationCount++ << "\n";
         for(int i = 0; i < blockOrdering.size(); i++){//may need to code seperately for different directions
             std::vector<BitVector> prevVectors;
-            for(int i=0;i<BlockMap[blockOrdering[i]].prev.size();i++){
-              BasicBlock* block = BlockMap[blockOrdering[i]].prev[i];	
+        	outs() << "Prev Size = "  << BlockMap[blockOrdering[i]].prev.size() << "\n";
+	      printBitVector(BlockMap[blockOrdering[i]].in);
+	       	if(!i){
+		       prevVectors.push_back(BlockMap[blockOrdering[i]].in);
+	       }	       
+	    for(int j=0;j<BlockMap[blockOrdering[i]].prev.size();j++){
+              BasicBlock* block = BlockMap[blockOrdering[i]].prev[j];
+      		outs() << block << "\n";	      
               prevVectors.push_back(BlockMap[block].out);
             }
             BitVector input = runMeetOp(prevVectors);
+	    BlockMap[blockOrdering[i]].in=input;
             BitVector oldOutput = BlockMap[blockOrdering[i]].out;
-            BitVector output = transferFunction(BlockMap[blockOrdering[i]].in,blockOrdering[i],domainIndex,BlockMap); //change this according to transfer function
+            BitVector output = transferFunction(input,blockOrdering[i]); //change this according to transfer function
             if (output != oldOutput){
               valueChanged = true;
               BlockMap[blockOrdering[i]].out=output;
@@ -128,6 +140,7 @@ namespace llvm {
         BlockMap[&*FI].out=boundaryCondition;
     }
     
+    
     //Setting Block Ordering (TODO)
     blockOrdering.push_back(initialBlock);
     for (int i=0; i<blockOrdering.size(); ++i) {
@@ -148,6 +161,20 @@ namespace llvm {
         }
       }
     }
+    //Remove this 
+    for(Function::iterator FI = F.begin(); FI!=F.end();++FI){
+    	outs()<< &*FI << " ";
+    }
+    outs() << "\n";
+    for(int i=0;i<blockOrdering.size();i++){
+    	outs() << blockOrdering[i] << " ";
+    }
+    outs() << "\n";
+    outs() << "Initial Block = " << initialBlock << "\n";
+    outs() << "Ending Block = " << endingBlock << "\n";
+
+    //Till here
+    
   runPassFunction(F); 
   outs() << "Done With Running Value Converged to\n";
   printBitVector(BlockMap[endingBlock].out);

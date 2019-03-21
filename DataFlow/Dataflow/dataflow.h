@@ -41,7 +41,7 @@ namespace llvm {
     std::vector<BasicBlock*> blockOrdering;
     DataFlow(bool,bool,BitVector,BitVector,std::vector<void*> domain);
     
-    BitVector transferFunction(BitVector,BasicBlock* ,std::map<void*,int> ,std::map<BasicBlock*,BasicBlockSt>);
+    BitVector transferFunction(BitVector,BasicBlock*);
 
     //methods
     // virtual BitVector transferFunction(BitVector input,BasicBlock* block){

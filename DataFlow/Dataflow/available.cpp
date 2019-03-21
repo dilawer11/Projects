@@ -36,13 +36,11 @@ namespace {
 	      if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
 	    // Create a new Expression to capture the RHS of the BinaryOperator
 	        expressions.push_back(Expression(BI));
+		domain.push_back((void*)(&*(BI)));
 	      }
 	    }
     }
-    BitVector temp(expressions.size(),0);
-    for(int i=0;i<expressions.size();i++){
-      domain.push_back((void*)(&expressions[i]));
-    }
+    BitVector temp(domain.size(),0);
      
     DataFlow obj(true,false,temp,temp,domain);
     
