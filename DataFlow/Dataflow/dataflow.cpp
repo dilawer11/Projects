@@ -18,6 +18,37 @@ namespace llvm {
     }
     
   }
+    BitVector DataFlow::transferFunction(BitVector input,BasicBlock* block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
+        // printBitVector(input);
+        int sz=input.size();
+        BitVector gen(sz,false);
+        BitVector kill(sz,false);
+        BitVector out(sz,false);
+        for (BasicBlock::iterator i = block->begin(), e = block->end(); i!=e; ++i) {
+          Instruction* I = &*i;
+          // First calculating Generated defs
+          
+          if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
+              int ind=domainIndex[I];
+              if(input[ind]==0){
+                  gen[ind]=1;
+              }else if(input[ind]==1){
+                  kill[ind]=1;
+              }
+              // UNION
+              for(int x=0;x<out.size();x++){
+                  if(gen[x]==1 || input[x]==1){
+                      out[x]=1;
+                  }
+                  if(kill[x]==1){
+                      out[x]=0;
+                  }
+              }
+          }
+          // (Input_instructions /U/ (Generated)) //XOR (Killed)
+      }
+    return out;
+    }
   BitVector DataFlow::runMeetOp(std::vector<BitVector> bitVectors)
   {
     BitVector returnBV;
