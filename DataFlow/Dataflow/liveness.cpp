@@ -11,14 +11,7 @@
 using namespace llvm;
 
 namespace {
-
-  class Liveness : public FunctionPass {
-  public:
-    static char ID;
-
-    Liveness() : FunctionPass(ID) { }
-    
-    virtual BitVector transferFunction(BitVector output,BasicBlock *block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
+    BitVector transferFunc(BitVector output,BasicBlock *block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
       int sz=output.size();
       BitVector use(sz,false);
       BitVector def(sz,false);
@@ -77,16 +70,22 @@ namespace {
       }
       return in;
     }
+  class Liveness : public FunctionPass {
+  public:
+    static char ID;
+
+    Liveness() : FunctionPass(ID) { }
+    
+  
 
     virtual bool runOnFunction(Function& F) {
-      BitVector temp(expressions.size(),0);
-      for(int i=0;i<expressions.size();i++){
-        domain.push_back((void*)(&expressions[i]));
-      }
-      
-      DataFlow obj(false,true,);
+      std::vector<void*>domain;
+
+      //Fill Domain
+      BitVector temp(domain.size(),0);  
+      DataFlow obj(false,true,temp,temp,domain);
+      obj.transferFunction=&transferFunc;
       obj.runPassSetup(F);
-      // Did not modify the incoming Function.
       return false;
     }
 
