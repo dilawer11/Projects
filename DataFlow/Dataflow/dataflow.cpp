@@ -20,7 +20,7 @@ namespace llvm {
   }
     BitVector DataFlow::transferFunction(BitVector input,BasicBlock* block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
         // printBitVector(input);
-	outs() << "Transfer Function Called\n";
+	      outs() << "Transfer Function Called\n";
         int sz=input.size();
         BitVector gen(sz,false);
         BitVector kill(sz,false);
@@ -65,8 +65,10 @@ namespace llvm {
   }
   void DataFlow::runPassFunction(Function &F){
     bool valueChanged = true;
+    int interationCount =1;
     while(valueChanged){
         valueChanged = false;
+        outs() << "Iteration : " << iterationCount++ << "\n";
         for(int i = 0; i < blockOrdering.size(); i++){//may need to code seperately for different directions
             std::vector<BitVector> prevVectors;
             for(int i=0;i<BlockMap[blockOrdering[i]].prev.size();i++){
@@ -74,8 +76,9 @@ namespace llvm {
               prevVectors.push_back(BlockMap[block].out);
             }
             BitVector input = runMeetOp(prevVectors);
-            if (input != BlockMap[blockOrdering[i]].in){
-              BitVector output = transferFunction(BlockMap[blockOrdering[i]].in,blockOrdering[i],domainIndex,BlockMap); //change this according to transfer function
+            BitVector oldOutput = BlockMap[blockOrdering[i]].out;
+            BitVector output = transferFunction(BlockMap[blockOrdering[i]].in,blockOrdering[i],domainIndex,BlockMap); //change this according to transfer function
+            if (output != oldOutput){
               valueChanged = true;
               BlockMap[blockOrdering[i]].out=output;
             } 
