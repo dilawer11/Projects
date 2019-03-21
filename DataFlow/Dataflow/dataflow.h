@@ -24,7 +24,7 @@ namespace llvm {
     struct DFResult{
         //Fill in if necessary
     };
-
+	void printBitVector(BitVector);
     class DataFlow{
     public:
         
@@ -41,7 +41,7 @@ namespace llvm {
     std::vector<BasicBlock*> blockOrdering;
     DataFlow(bool,bool,BitVector,BitVector,std::vector<void*> domain);
     
-    BitVector (*transferFunction)(BitVector,BasicBlock* ,std::map<void*,int> ,std::map<BasicBlock*,BasicBlockSt>);
+    BitVector transferFunction(BitVector,BasicBlock* ,std::map<void*,int> ,std::map<BasicBlock*,BasicBlockSt>);
 
     //methods
     // virtual BitVector transferFunction(BitVector input,BasicBlock* block){
@@ -51,7 +51,6 @@ namespace llvm {
     BitVector runMeetOp(std::vector<BitVector> bitVectors);
     void runPassSetup(Function &F);
     void runPassFunction(Function &F);
-    void printBitVector(BitVector toPrint);
     // virtual BitVector transferFunction(BitVector,BasicBlock* ,std::map<void*,int> ,std::map<BasicBlock*,BasicBlockSt>);
 
     

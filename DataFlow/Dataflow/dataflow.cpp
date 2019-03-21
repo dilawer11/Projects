@@ -43,7 +43,7 @@ namespace llvm {
             }
             BitVector input = runMeetOp(prevVectors);
             if (input != BlockMap[blockOrdering[i]].in){
-              BitVector output = transferFunction(BlockMap[&*FI].in,blockOrdering[i],domainIndex,BlockMap); //change this according to transfer function
+              BitVector output = transferFunction(BlockMap[blockOrdering[i]].in,blockOrdering[i],domainIndex,BlockMap); //change this according to transfer function
               valueChanged = true;
               BlockMap[blockOrdering[i]].out=output;
             } 
@@ -117,7 +117,7 @@ namespace llvm {
   outs() << "Done With Running Value Converged to\n";
   printBitVector(BlockMap[endingBlock].out);
   }
-  void DataFlow::printBitVector(BitVector toPrint){
+  void printBitVector(BitVector toPrint){
     if(toPrint.size() == 0){
       outs() << "-";
     }

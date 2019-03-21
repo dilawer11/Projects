@@ -14,8 +14,9 @@ using namespace llvm;
 using namespace std;
 
 namespace {
-  BitVector transferFunc(BitVector input,BasicBlock* block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
+  BitVector llvm::DataFlow::transferFunction(BitVector input,BasicBlock* block,std::map<void*,int> domainIndex,std::map<BasicBlock*,BasicBlockSt> BlockMap){
         // printBitVector(input);
+	outs() << "Called\n";
         int sz=input.size();
         BitVector gen(sz,false);
         BitVector kill(sz,false);
@@ -43,6 +44,7 @@ namespace {
           }
           // (Input_instructions /U/ (Generated)) //XOR (Killed)
       }
+	printBitVector(out);
     return out;
     }
   class AvailableExpressions : public FunctionPass {
@@ -77,12 +79,11 @@ namespace {
      
     DataFlow obj(true,false,temp,temp,domain);
     
-    obj.transferFunction=&transferFunc;
     obj.runPassSetup(F);
     outs() << "Back To Available\n";
     outs()<<obj.blockOrdering.size()<<"\n";
     for(int i=0;i<obj.blockOrdering.size();i++){
-      obj.printBitVector((obj.BlockMap[obj.blockOrdering[i]]).out);
+      printBitVector((obj.BlockMap[obj.blockOrdering[i]]).out);
     }	 
     // Print out the expressions used in the function
     outs() << "Expressions used by this function:\n";
