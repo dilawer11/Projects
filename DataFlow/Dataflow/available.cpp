@@ -14,7 +14,7 @@ using namespace llvm;
 using namespace std;
 
 namespace {
-BitVector transferFunc(BitVector input,BasicBlock* block){
+BitVector transferFunc(BitVector input,BasicBlock* block,std::map<void*,int>domainIndex,std::map<BasicBlock*,BasicBlockSt>BlockMap){
         // printBitVector(input);
 	      // outs() << "Transfer Function Called\n";
         int sz=input.size();

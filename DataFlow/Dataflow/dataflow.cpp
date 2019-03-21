@@ -53,7 +53,7 @@ namespace llvm {
             BitVector input = runMeetOp(prevVectors);
 	    BlockMap[blockOrdering[i]].in=input;
             BitVector oldOutput = BlockMap[blockOrdering[i]].out;
-            BitVector output = transferFunction(input,blockOrdering[i]); //change this according to transfer function
+            BitVector output = transferFunction(input,blockOrdering[i],domainIndex,BlockMap); //change this according to transfer function
             if (output != oldOutput){
               valueChanged = true;
               BlockMap[blockOrdering[i]].out=output;
@@ -107,7 +107,7 @@ namespace llvm {
     //Setting Block Ordering (TODO)
     blockOrdering.push_back(initialBlock);
     for (int i=0; i<blockOrdering.size(); ++i) {
-      outs() << "Turn Order : " << i << "\n";
+     // outs() << "Turn Order : " << i << "\n";
       BasicBlock* block = blockOrdering[i];
       if(direction){
         for(succ_iterator B = succ_begin(block); B != succ_end(block); ++B){
