@@ -105,25 +105,28 @@ namespace llvm {
     
     
     //Setting Block Ordering (TODO)
-    blockOrdering.push_back(initialBlock);
-    for (int i=0; i<blockOrdering.size(); ++i) {
-     // outs() << "Turn Order : " << i << "\n";
-      BasicBlock* block = blockOrdering[i];
-      if(direction){
-        for(succ_iterator B = succ_begin(block); B != succ_end(block); ++B){
-          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)==blockOrdering.end()){
-            blockOrdering.push_back(*B);
-          }
+    if(direction){
+        blockOrdering.push_back(initialBlock);
+        for (int i=0; i<blockOrdering.size(); ++i) {
+          BasicBlock* block = blockOrdering[i];
+            for(succ_iterator B = succ_begin(block); B != succ_end(block); ++B){
+              if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)==blockOrdering.end()){
+                blockOrdering.push_back(*B);
+              }
+            }
         }
-      }
-      else{
-        for(pred_iterator B = pred_begin(block); B != pred_end(block); ++B){
-          if(std::find(blockOrdering.begin(),blockOrdering.end(),*B)==blockOrdering.end()){
-            blockOrdering.push_back(*B);
+    }
+    else{
+      for(po_iterator<BasicBlock*> I = po_begin(&F.getEntryBlock()), E = po_end(&F.getEntryBlock()); I != E ; ++I){
+          if(std::find(blockOrdering.begin(),blockOrdering.end(),*I)==blockOrdering.end()){
+            blockOrdering.push_back(*I);
           }
-        }
       }
     }
+    
+
+   
+
     // //Remove this 
     // for(Function::iterator FI = F.begin(); FI!=F.end();++FI){
     // 	outs()<< &*FI << " ";

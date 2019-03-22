@@ -15,6 +15,7 @@
 #include "llvm/IR/ValueMap.h"
 #include "llvm/IR/CFG.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/ADT/PostOrderIterator.h"
 namespace llvm {
     struct BasicBlockSt{
 	    std::vector<BasicBlock*> prev; //All the blocks previous in running of this type (succ in backwards, pred in forwards)
