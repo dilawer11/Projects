@@ -66,6 +66,10 @@ namespace {
           def[it->second]=1;
         }
       }
+     // printBitVector(def);
+     // printBitVector(use);
+     // printBitVector(output);
+     // outs() <<"\n\n";
       // use U (output-Def)
       for(int i=0;i<sz;i++){
         if(output[i]==1){
@@ -74,10 +78,15 @@ namespace {
         if(def[i]==1){
           in[i]=0;
         }
-        if(use[i]==1){
+        if(use[i]==1 && def[i]==0){
           in[i]=1;
         }
-      }
+       }
+     //in = def;
+     //in.flip();
+     //in&=output;
+     //in|=use;
+
       return in;
     }
   class Liveness : public FunctionPass {
