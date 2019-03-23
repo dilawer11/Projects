@@ -89,7 +89,17 @@ BitVector transferFunc(BitVector input,BasicBlock* block,std::map<void*,int>doma
     for(int i=0;i<obj.blockOrdering.size();i++){
       outs() << *obj.blockOrdering[i]<<"\n";
       outs() << "Available Expressions After Block:\n";
-      printAvailable(&expressions,obj.BlockMap[obj.blockOrdering[i]].out);
+      BitVector b =obj.BlockMap[obj.blockOrdering[i]].out;
+      outs() << "{ ";
+      for(int j=0;j<expressions.size();j++){
+      	if(b[j]){
+		if(j){
+			outs() << ", ";
+		}
+		outs() << expressions[j].toString();
+	}
+      }
+      outs() << " }\n";
     }
       
       // Did not modify the incoming Function.

@@ -142,8 +142,8 @@ namespace llvm {
     // //Till here
     
   runPassFunction(F); 
-  outs() << "Done With Running Value Converged to\n";
-  printBitVector(BlockMap[endingBlock].out);
+ // outs() << "Done With Running Value Converged to\n";
+  //printBitVector(BlockMap[endingBlock].out);
   }
   void printBitVector(BitVector toPrint){
     if(toPrint.size() == 0){
