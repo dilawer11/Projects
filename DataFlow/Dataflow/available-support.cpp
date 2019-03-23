@@ -89,6 +89,19 @@ namespace llvm {
     outs() << "}\n";
   }
 
+  void printAvailable(std::vector<Expression> * x,BitVector b){
+    outs() << "{";
+    for (int i = 0; i<x.size();i++) {
+      if(b[i]){
+        if (i) {
+          outs() << ", ";
+        }
+        outs() << (it->toString());
+      }  
+    }
+    outs() << "}\n";
+  }
+
   // The following code may be useful for both of your passes:
   // If you recall, there is no "get the variable on the left
   // hand side" function in LLVM. Normally this is fine: we

@@ -30,6 +30,7 @@ namespace llvm {
   };
 
   void printSet(std::vector<Expression> * x);
+  void printAvailable(std::vector<Expression> * x,BitVector b);
 }
 
 #endif

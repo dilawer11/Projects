@@ -85,14 +85,12 @@ BitVector transferFunc(BitVector input,BasicBlock* block,std::map<void*,int>doma
     DataFlow obj(true,false,temp,temp,domain);
     obj.transferFunction = &transferFunc;  
     obj.runPassSetup(F);
-  
-    outs()<<obj.blockOrdering.size()<<"\n";
+
     for(int i=0;i<obj.blockOrdering.size();i++){
-      printBitVector((obj.BlockMap[obj.blockOrdering[i]]).out);
-    }	 
-    // Print out the expressions used in the function
-    outs() << "Expressions used by this function:\n";
-    printSet(&expressions);
+      outs() << *obj.blockOrdering[i]<<"\n";
+      outs() << "Available Expressions After Block:\n";
+      printAvailable(&expressions,obj.BlockMap[obj.blockOrdering[i]].out);
+    }
       
       // Did not modify the incoming Function.
       return false;
