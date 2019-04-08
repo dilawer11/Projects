@@ -1,27 +1,71 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/components/Index'
-import AddProduct from '@/components/AddProduct'
-import EditProduct from '@/components/EditProduct'
+import ProductsIndex from '@/components/ProductsManagement/ProductsIndex'
+import AddProduct from '@/components/ProductsManagement/AddProduct'
+import EditProduct from '@/components/ProductsManagement/EditProduct'
+import Dashboard from '@/components/Dashboard'
+import Login from '@/components/Login'
+import firebase from 'firebase'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
-      path: '/',
-      name: 'Index',
-      component: Index
+      path: '/products',
+      name: 'ProductsIndex',
+      component: ProductsIndex,
+      meta:{
+        requiresAuth:true
+      }
     },
     {
-      path: '/add-product',
+      path: '/products/add-product',
       name: 'AddProduct',
-      component: AddProduct
+      component: AddProduct,
+      meta:{
+        requiresAuth:true
+      }
     },
     {
-      path: '/edit-product/:product_slug',
+      path: '/products/edit-product/:product_slug',
       name: 'EditProduct',
-      component: EditProduct
+      component: EditProduct,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/',
+      name: 'Dashboard',
+      component: Dashboard,
+      meta:{
+        requiresAuth:true
+      }
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login,
+      meta:{
+        logoutOnly:true
+      }
     }
   ]
 })
+router.beforeEach((to,from,next)=>{
+  if(to.matched.some(rec => rec.meta.requiresAuth)){
+    let user = firebase.auth().currentUser
+    if(user){
+      next()
+    }else{
+      next({name:'Login'})
+    }
+  } else{
+    next()
+  }
+})
+
+
+
+export default router

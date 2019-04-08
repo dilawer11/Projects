@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div v-if="loading" class="progress">
+            <div class="indeterminate"></div>
+        </div>    
         <div v-if="product" class="edit-product container">
             <h2 class="center-align indigo-text">Edit Product</h2>
             <form @submit.prevent="editProduct"> 
@@ -51,7 +54,8 @@ export default {
             feedbackTop: 'Loading...',
             anotherPrice: null,
             anotherSize: null,
-            feedback: null
+            feedback: null,
+            loading: false
         }
     },
     methods:{
@@ -76,7 +80,7 @@ export default {
         editProduct(){
 
               if(this.product.name && this.product.category && this.product.sizes.length){
-             
+                this.loading=true;
                 this.feedback=null
                 this.product.slug = slugify(this.product.name,{
                     replacement: '-',
@@ -90,11 +94,14 @@ export default {
                     image : this.product.image,
                     slug: this.product.slug
                 }).then(()=>{
+                    this.loading=false;
                     alert('Product Updated Sucessfully')
-                    this.$router.push({name:'Index'})
+                    this.$router.push({name:'ProductIndex'})
+                    
                 }).catch(err=>{
                     alert('Something went wrong please try again later')
-                    this.$router.push({name:'Index'})
+                    this.$router.push({name:'ProductIndex'})
+                    this.loading=false;
                 })
             } else{
                 if(!this.product.name){
@@ -108,20 +115,23 @@ export default {
         },
     },
     created(){
+        this.loading=true;
         let ref = db.collection('products').where('slug', '==', this.$route.params.product_slug)
         ref.get().then(snapshot =>{
             if(snapshot.empty){
+                
                 alert('Cannot find the product in the database')
-                this.$router.push({name: 'Index'})
+                this.$router.push({name: 'ProductIndex'})
             } else{
                 snapshot.forEach(doc => {
                     this.product = doc.data()
                     this.product.id = doc.id;
                 })
             }
-            
+            this.loading=false;
            }).catch(err=>{
             console.log(err)
+            this.loading=false;
         })
     }
 }

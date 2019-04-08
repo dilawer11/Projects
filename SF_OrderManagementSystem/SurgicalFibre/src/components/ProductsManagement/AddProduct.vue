@@ -1,4 +1,8 @@
 <template>
+<div>
+    <div v-if="loading" class="progress">
+        <div class="indeterminate"></div>
+    </div>    
 <div class="add-product container">
     <h2 class="center-align indigo-text">Add New Product</h2>
     <form @submit.prevent="addProduct"> 
@@ -33,6 +37,7 @@
         </div> 
     </form>
 </div>
+</div>
 </template>
 
 <script>
@@ -48,19 +53,20 @@ export default {
             anotherSize: null,
             anotherPrice: null,
             feedback: null,
-            slug: null
+            slug: null,
+            loading:false,
         }
     },
     methods:{
         addProduct(){
             if(this.name && this.category && this.sizes.length){
-             
+                this.loading=true;
                 this.feedback=null
                 this.slug = slugify(this.name,{
                     replacement: '-',
                     remove: /[$*_+%~()'",!\-:@]/g,
                     lower: true
-                    })
+                })
                 db.collection('products').add({
                     name: this.name,
                     category: this.category,
@@ -69,11 +75,13 @@ export default {
                     slug: this.slug
 
                 }).then(()=>{
+                    this.loading=false;
                     alert('Product Added Sucessfully')
-                    this.$router.push({name:'Index'})
+                    this.$router.push({name:'ProductIndex'})
                 }).catch(err=>{
+                    this.loading=false;
                     alert('Something went wrong please try again later')
-                    this.$router.push({name:'Index'})
+                    this.$router.push({name:'ProductIndex'})
                 })
             } else{
                 if(!this.name){
