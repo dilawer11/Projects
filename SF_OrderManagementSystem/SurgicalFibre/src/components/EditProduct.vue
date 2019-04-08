@@ -21,7 +21,7 @@
        
         <div class="field add-sizes">
             <label for="add-sizes">Size</label>
-            <input type="text" name="add-size" @keydown.tab.prevent="addSize" v-model="anotherSize">
+            <input type="text" name="add-size" v-model="anotherSize">
             <label for="add-sizes">Price</label>
             <input type="text" name="add-price" @keydown.tab.prevent="addSize" v-model="anotherPrice">
         </div>
@@ -42,6 +42,7 @@
 
 <script>
 import db from '@/firebase/init'
+import slugify from 'slugify'
 export default {
     name: 'EditProduct',
     data(){
@@ -73,8 +74,38 @@ export default {
             this.product.sizes=this.product.sizes.filter(element => element!=size)
         },
         editProduct(){
-            
-        }
+
+              if(this.product.name && this.product.category && this.product.sizes.length){
+             
+                this.feedback=null
+                this.product.slug = slugify(this.product.name,{
+                    replacement: '-',
+                    remove: /[$*_+%~()'",!\-:@]/g,
+                    lower: true
+                    })
+                db.collection('products').doc(this.product.id).update({
+                    name: this.product.name,
+                    category: this.product.category,
+                    sizes: this.product.sizes,
+                    image : this.product.image,
+                    slug: this.product.slug
+                }).then(()=>{
+                    alert('Product Updated Sucessfully')
+                    this.$router.push({name:'Index'})
+                }).catch(err=>{
+                    alert('Something went wrong please try again later')
+                    this.$router.push({name:'Index'})
+                })
+            } else{
+                if(!this.product.name){
+                    this.feedback='Please enter a product name'
+                } else if(!this.product.category){
+                    this.feedback='Please enter a product category'
+                } else{
+                    this.feedback ='Please enter atleast one size and price info'
+                }
+            }
+        },
     },
     created(){
         let ref = db.collection('products').where('slug', '==', this.$route.params.product_slug)

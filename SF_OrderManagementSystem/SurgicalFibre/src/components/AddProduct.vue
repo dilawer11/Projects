@@ -20,7 +20,7 @@
        
         <div class="field add-sizes">
             <label for="add-sizes">Size</label>
-            <input type="text" name="add-size" @keydown.tab.prevent="addSize" v-model="anotherSize">
+            <input type="text" name="add-size" v-model="anotherSize">
             <label for="add-sizes">Price</label>
             <input type="text" name="add-price" @keydown.tab.prevent="addSize" v-model="anotherPrice">
         </div>
