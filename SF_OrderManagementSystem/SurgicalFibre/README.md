@@ -2,6 +2,9 @@
 
 > A Product Showroom and Online Order Management System
 
+src/firebase/init.js file is missing in this repo to get access to that file either contact me through slack or email
+If you want any other help with setting up feel free to contact me
+
 ## Build Setup
 
 ``` bash
