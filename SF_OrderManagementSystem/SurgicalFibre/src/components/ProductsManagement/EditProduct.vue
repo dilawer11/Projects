@@ -121,7 +121,7 @@ export default {
             if(snapshot.empty){
                 
                 alert('Cannot find the product in the database')
-                this.$router.push({name: 'ProductIndex'})
+                this.$router.push({name: 'ProductsIndex'})
             } else{
                 snapshot.forEach(doc => {
                     this.product = doc.data()

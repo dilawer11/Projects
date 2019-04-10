@@ -73,6 +73,13 @@ export default {
             this.email= ""
             this.password=""
         }
+    },
+    created(){
+        firebase.auth().onAuthStateChanged(cred=>{
+            if(cred){
+                this.$router.push({name : 'Dashboard'})
+            }
+        })
     }
 }
 </script>

@@ -1,12 +1,12 @@
 <template>
   <div class="products">
     <div v-if="loading" class="progress">
-        <div class="indeterminate"></div>
-    </div>    
+        <div class="indeterminate"></div> 
+    </div>
+    <p class="red-text" v-if="feedback">{{feedback}}</p>
     <div class="product-index container">
-      
-      <p class="red-text" v-if="feedback">{{feedback}}</p>
       <div class="card" v-for="product in products" :key="product.id">
+
         <div class="card-content">
           <i class="material-icons delete " @click="deleteProduct(product.id)">delete</i>
           <h2 class="indigo-text">{{product.name}}</h2>
@@ -22,11 +22,11 @@
             <i class="material-icons edit">edit</i>
           </router-link>
         </span>
+        
       </div>
-      <div class="card new-product">
+      <!-- <div class="card new-product">
         <div class="card-content">
           <h2 class="pink-text">Add New Product</h2>
-          <!-- <h6 class="blue-text">Add a new product to the database</h6> -->
           <ul class="sizes">
             <li >
               <span class="chip">Sizes Available</span>
@@ -37,8 +37,13 @@
                 <i class="material-icons">add</i>
               </router-link>
             </a>
-        </div>
-      </div>
+          </div>
+      </div> -->
+      <span class="hoverable pulse btn-floating btn-large halfway-fab red darken-2 add-product">
+        <router-link :to="{name: 'AddProduct'}">
+        <i class="material-icons">add</i>
+        </router-link>
+      </span>
     </div>
   </div>
 </template>
@@ -73,7 +78,7 @@ export default {
     db.collection('products').get()
     .then(snapshot => {
       if(snapshot.empty){
-        this.feedback = 'No products in the database to be shown'
+        this.feedback = 'No products in the database to be shown (please make sure you have a strong internet connection)'
       } else{
         this.feedback = null
         snapshot.forEach(document => {
@@ -83,6 +88,9 @@ export default {
         });
       }
       this.loading=false
+    }).catch(err=>{
+      console.log(err)
+      this.feedback = 'Database returned an error'
     })
   }
 }
@@ -115,6 +123,9 @@ export default {
   cursor:pointer;
   color:#aaa;
   font-size:1.4em;
+}
+.product-index .add-product{
+  margin-bottom: 50px;
 }
 
 

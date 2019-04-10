@@ -7,11 +7,12 @@
 
 <script>
 import Navbar from '@/components/ProductsManagement/Navbar'
+import firebase from 'firebase'
 export default {
   name: 'App',
   components:{
     Navbar
-  }
+  },
 }
 </script>
 

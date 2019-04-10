@@ -5,36 +5,17 @@ import AddProduct from '@/components/ProductsManagement/AddProduct'
 import EditProduct from '@/components/ProductsManagement/EditProduct'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
+import NotFound from '@/components/NotFound'
+import ArchivedOrders from '@/components/OrderManagement/ArchivedOrders'
+import OrdersIndex from '@/components/OrderManagement/OrdersIndex'
+import ViewOrder from '@/components/OrderManagement/ViewOrder'
+import EditOrder from '@/components/OrderManagement/EditOrder'
 import firebase from 'firebase'
 
 Vue.use(Router)
 
 const router = new Router({
   routes: [
-    {
-      path: '/products',
-      name: 'ProductsIndex',
-      component: ProductsIndex,
-      meta:{
-        requiresAuth:true
-      }
-    },
-    {
-      path: '/products/add-product',
-      name: 'AddProduct',
-      component: AddProduct,
-      meta:{
-        requiresAuth:true
-      }
-    },
-    {
-      path: '/products/edit-product/:product_slug',
-      name: 'EditProduct',
-      component: EditProduct,
-      meta:{
-        requiresAuth: true
-      }
-    },
     {
       path: '/',
       name: 'Dashboard',
@@ -50,12 +31,73 @@ const router = new Router({
       meta:{
         logoutOnly:true
       }
+    },
+    {
+      path: '/products',
+      name: 'ProductsIndex',
+      component: ProductsIndex,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/products/add-product',
+      name: 'AddProduct',
+      component: AddProduct,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/products/edit-product/:product_slug',
+      name: 'EditProduct',
+      component: EditProduct,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/orders',
+      name: 'OrdersIndex',
+      component : OrdersIndex,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/orders/archived',
+      name: 'ArchivedOrders',
+      component : ArchivedOrders,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/orders/view-order/:order_no',
+      name: 'ViewOrder',
+      component : ViewOrder,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/orders/edit-order/:order_no',
+      name: 'EditOrder',
+      component : EditOrder,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '*',
+      name: 'NotFound',
+      component: NotFound
     }
   ]
 })
 router.beforeEach((to,from,next)=>{
   if(to.matched.some(rec => rec.meta.requiresAuth)){
-    let user = firebase.auth().currentUser
+    var user = firebase.auth().currentUser
     if(user){
       next()
     }else{
