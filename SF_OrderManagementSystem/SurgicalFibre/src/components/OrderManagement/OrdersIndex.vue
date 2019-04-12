@@ -1,5 +1,5 @@
 <template>
-   <div class="products">
+   <div class="order-index">
     <div v-if="loading" class="progress">
         <div class="indeterminate"></div> 
     </div>
@@ -7,7 +7,7 @@
     <p class="red-text center-align" v-if="feedback">{{feedback}}</p>
     <div class="container">
         <div class="row">
-            <div class="col s12 m4 l4"  v-for="order in orders" :key="order.id">
+            <div class="col s12 m4"  v-for="order in orders" :key="order.id">
                 <div class="card hoverable grey">
                     <router-link :to="{name: 'ViewOrder',params:{order_no: order.no}}">
                         <div class="card-content">
@@ -89,5 +89,7 @@ export default {
 </script>
 
 <style>
-
+.order-index .card{
+    height: 300px;
+}
 </style>

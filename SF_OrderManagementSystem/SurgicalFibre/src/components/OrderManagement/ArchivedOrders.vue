@@ -60,7 +60,6 @@ export default {
         }
     },
     created(){
-    //fetch data from db and update in local when created fires
         //fetch data from db and update in local when created fires
         db.collection('orders').get()
         .then(snapshot => {
