@@ -3,8 +3,9 @@
         <div v-if="loading" class="progress">
             <div class="indeterminate"></div>
         </div>    
+        <h2 class="center-align black-text">Edit Product</h2>
         <div v-if="product" class="edit-product container">
-            <h2 class="center-align indigo-text">Edit Product</h2>
+            
             <form @submit.prevent="editProduct"> 
         <div class="field name">
             <label for="name">Product Name</label>

@@ -3,6 +3,7 @@
     <div v-if="loading" class="progress">
         <div class="indeterminate"></div> 
     </div>
+    <h2 class="center-align black-text">Products</h2>
     <p class="red-text" v-if="feedback">{{feedback}}</p>
     <div class="product-index container">
       <div class="card" v-for="product in products" :key="product.id">
@@ -24,21 +25,7 @@
         </span>
         
       </div>
-      <!-- <div class="card new-product">
-        <div class="card-content">
-          <h2 class="pink-text">Add New Product</h2>
-          <ul class="sizes">
-            <li >
-              <span class="chip">Sizes Available</span>
-            </li> 
-          </ul>
-            <a href="" class="btn-floating btn-large halfway-fab pink add-product">
-              <router-link :to="{name: 'AddProduct'}">
-                <i class="material-icons">add</i>
-              </router-link>
-            </a>
-          </div>
-      </div> -->
+
       <span class="hoverable pulse btn-floating btn-large halfway-fab red darken-2 add-product">
         <router-link :to="{name: 'AddProduct'}">
         <i class="material-icons">add</i>

@@ -2,9 +2,10 @@
 <div>
     <div v-if="loading" class="progress">
         <div class="indeterminate"></div>
-    </div>    
-<div class="add-product container">
-    <h2 class="center-align indigo-text">Add New Product</h2>
+    </div>   
+    <h2 class="center-align black-text">Add New Product</h2> 
+    <div class="add-product container">
+    
     <form @submit.prevent="addProduct"> 
         <div class="field name">
             <label for="name">Product Name</label>
