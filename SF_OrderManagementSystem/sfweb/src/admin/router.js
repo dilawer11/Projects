@@ -12,7 +12,6 @@ import ViewOrder from '@/components/OrderManagement/ViewOrder'
 import EditOrder from '@/components/OrderManagement/EditOrder'
 import Query from '@/components/Query'
 import Order from '@/components/Order'
-import Index from '@/components/Index'
 import firebase from 'firebase/app'
 
 Vue.use(Router)
@@ -23,7 +22,7 @@ const router = new Router({
   routes: [
  
     {
-      path: '/',
+      path: '/admin/',
       name: 'Dashboard',
       component: Dashboard,
       meta:{
@@ -31,7 +30,7 @@ const router = new Router({
       }
     },
     {
-      path: '/login',
+      path: '/admin/login',
       name: 'Login',
       component: Login,
       meta:{
@@ -39,7 +38,7 @@ const router = new Router({
       }
     },
     {
-      path: '/products',
+      path: '/admin/products',
       name: 'ProductsIndex',
       component: ProductsIndex,
       meta:{
@@ -47,7 +46,7 @@ const router = new Router({
       }
     },
     {
-      path: '/products/add-product',
+      path: '/admin/products/add-product',
       name: 'AddProduct',
       component: AddProduct,
       meta:{
@@ -55,7 +54,7 @@ const router = new Router({
       }
     },
     {
-      path: '/products/edit-product/:product_slug',
+      path: '/admin/products/edit-product/:product_slug',
       name: 'EditProduct',
       component: EditProduct,
       meta:{
@@ -63,7 +62,7 @@ const router = new Router({
       }
     },
     {
-      path: '/orders',
+      path: '/admin/orders',
       name: 'OrdersIndex',
       component : OrdersIndex,
       meta:{
@@ -71,7 +70,7 @@ const router = new Router({
       }
     },
     {
-      path: '/orders/archived',
+      path: '/admin/orders/archived',
       name: 'ArchivedOrders',
       component : ArchivedOrders,
       meta:{
@@ -79,7 +78,7 @@ const router = new Router({
       }
     },
     {
-      path: '/orders/view-order/:order_no',
+      path: '/admin/orders/view-order/:order_no',
       name: 'ViewOrder',
       component : ViewOrder,
       meta:{
@@ -87,7 +86,7 @@ const router = new Router({
       }
     },
     {
-      path: '/orders/edit-order/:order_no',
+      path: '/admin/orders/edit-order/:order_no',
       name: 'EditOrder',
       component : EditOrder,
       meta:{
@@ -95,19 +94,19 @@ const router = new Router({
       }
     },
     // Delete From this
-    {
-      path: '/query',
-      name: 'Query',
-      component: Query
-    },
-    {
-      path: '/order',
-      name: 'Order',
-      component: Order
-    },
+    // {
+    //   path: '/query',
+    //   name: 'Query',
+    //   component: Query
+    // },
+    // {
+    //   path: '/order',
+    //   name: 'Order',
+    //   component: Order
+    // },
     // 
     {
-      path: '*',
+      path: '/admin/*',
       name: 'NotFound',
       component: NotFound
     }

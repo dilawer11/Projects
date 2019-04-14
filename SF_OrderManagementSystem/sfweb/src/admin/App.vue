@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Navbar from '@/components/ProductsManagement/Navbar'
+import Navbar from '@/components/Navbar'
 import firebase from 'firebase/app'
 
 export default {
