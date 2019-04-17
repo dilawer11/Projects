@@ -10,8 +10,7 @@ import ArchivedOrders from '@/components/OrderManagement/ArchivedOrders'
 import OrdersIndex from '@/components/OrderManagement/OrdersIndex'
 import ViewOrder from '@/components/OrderManagement/ViewOrder'
 import EditOrder from '@/components/OrderManagement/EditOrder'
-import Query from '@/components/Query'
-import Order from '@/components/Order'
+
 import firebase from 'firebase/app'
 
 Vue.use(Router)
@@ -93,18 +92,6 @@ const router = new Router({
         requiresAuth: true
       }
     },
-    // Delete From this
-    // {
-    //   path: '/query',
-    //   name: 'Query',
-    //   component: Query
-    // },
-    // {
-    //   path: '/order',
-    //   name: 'Order',
-    //   component: Order
-    // },
-    // 
     {
       path: '/admin/*',
       name: 'NotFound',
