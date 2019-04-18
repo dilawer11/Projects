@@ -97,18 +97,20 @@
                                             <h3>{{item.name}}</h3>
                                             <ul class="list-unstyled project_info">
                                                 <li><span>Category :</span>{{item.category}}</li>
+                                                <li><span>Date :</span>March 19, 2017</li>
+                                                <li><span>Skills :</span>HTML5, JS, CSS3</li>
                                             </ul>
                                             <p>
-                                                <ul>
-                                                    <li v-for="(size,i) in item.sizes" :key="i">{{size.size}} </li>
-                                                </ul>
-                                                {{item.description}}
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                                             </p>
+                                            <a href="#" class="demo">Visit website</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
+
                         </div>            
                         </div><!--.row-->
                        
@@ -155,20 +157,41 @@
 
 <script>
 import db from '@/firebase/init'
+import { mapState, mapMutations } from 'vuex'
+import { setTimeout } from 'timers';
 export default {
     name: 'Index',
     data(){
         return{
-            products: null,
         }
     },
-    async created(){
-        const snapshot = await db.collection('products').get()
-        snapshot.forEach(document => {
-            let product = document.data()
-            this.products.push(product)
+
+    methods:{
+        ...mapMutations([
+            'ADD_PRODUCTS'
+        ]),
+        updateProducts(passedProducts){
+            this.ADD_PRODUCTS(passedProducts)
+        },
+     
+    },
+    created(){
+        db.collection('products').get().then(snapshot=>{
+            let localProducts = []
+            snapshot.forEach(doc=>{
+                localProducts.push(doc.data())
+            })
+            this.updateProducts(localProducts);
         })
     },
+    computed: {
+        ...mapState([
+            'products'
+         ])
+        
+    }
+
+  
   
     
 }
