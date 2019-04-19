@@ -15,7 +15,7 @@
     <br><br>
     <form class="col s12">
         <div class="row">
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12 md6">
                 <i class="material-icons prefix">account_circle</i>
                 <input v-model="firstname" id="first_name" type="text">
                 <label class="active grey-text" for="first_name">First Name</label>
