@@ -43,7 +43,7 @@
                         </tbody>
                     </table>
                     <br>
-                    <h6 class="right-align grey-text">Total Amount: <span class="indent black-text">{{order.total}} &nbsp;&nbsp;</span></h6>
+                    <h6 class="right-align grey-text">Total Amount: <span class="indent black-text">{{totalAmount}} &nbsp;&nbsp;</span></h6>
                 </div>
             </div>
             <div class="row status">
@@ -60,6 +60,9 @@
                     <a class="waves-effect waves-light btn-large red darken-2">Edit Order</a>
                     </router-link>
                 </div>
+                 <div class="input-feild col s6 m4">
+                    <span class="waves-effect waves-light btn-large red darken-2" @click="archiveOrder">Delete Order </span>
+                </div>
             </div>
         </div>
     </div>
@@ -67,6 +70,7 @@
 
 <script>
 import db from '@/firebase/init'
+import { mapState } from 'vuex'
 export default {
     name: 'ViewOrder',
     data(){
@@ -75,11 +79,6 @@ export default {
             feedback:true,
             order:null,
             selectedStatus:null,
-            statusOptions:[
-                'CONFIRMED',
-                'ARCHIVED',
-                'SENT'
-            ]
         }
     },
     methods:{
@@ -96,6 +95,13 @@ export default {
                 })
             }
         },
+        archiveOrder(){
+            if(confirm('ARE YOU SURE YOU WANT TO DELETE THIS ORDER')){
+                this.selectedStatus="ARCHIVED"
+                this.changeStatus()
+                this.$router.push({name:'OrdersIndex'})
+            }
+        }
     },
     created(){
         this.loading=true;
@@ -117,6 +123,12 @@ export default {
             console.log(err)
             this.loading=false;
         })
+    },
+    computed:{
+        ...mapState(['statusOptions']),
+        totalAmount: function (){
+            return this.order.items.reduce((num,item)=>item.total+num,0)
+        },
     }
 }
 </script>

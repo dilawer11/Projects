@@ -4,21 +4,22 @@
       <div class="box">
         <div class="my__img">
           <img src="assets/images/portfolio/work-1.jpg" alt>
+          <!-- <img :src="product.image" alt> -->
         </div>
         <div class="boxContent project_popup">
-          <a class="popup-with-zoom-anim" href="#slider_popup">
-            <div class="display-table">
+          <router-link :to="{name:'ProductDetail', params:{product_slug: product_index}}" >
+            <div class="display-table"> 
               <div class="display-table-cell">
                 <span class="post">{{product.category}}</span>
                 <h3 class="title">{{product.name}}</h3>
               </div>
             </div>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
     <!--Project 1 Details-->
-    <div id="slider_popup" class="zoom-anim-dialog mfp-hide">
+    <!-- <div id="slider_popup" class="zoom-anim-dialog mfp-hide">
       <div class="display-table">
         <div class="display-table-cell">
           <div class="row">
@@ -49,12 +50,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <div v-for="(sizeObj,index) in product.sizes" :key="index">
-                      <tr>
-                        <td>{{sizeObj.size}}</td>
-                        <td>{{currency}}{{sizeObj.price}}</td>
-                      </tr>
-                    </div>
+                    <tr v-for="(sizeObj,index) in product.sizes" :key="index">
+                      <td>{{sizeObj.size}}</td>
+                      <td>{{currency}}{{sizeObj.price}}</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -63,20 +62,32 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
 export default {
-  props: ["product", "currency"],
+  props: ["product_index"],
   data() {
-    return {};
+    return {
+      currencySign: 'Rs.',
+      currency : 1,
+    };
+  },
+  created(){
+    mapState(['products']),
+    this.product==products[product_index];
+  },
+  computed:{
+     ...mapState(['products']),
+     product:()=> {
+       return products[product_index];
+     },
   },
 
-  methods: {
-  }
+  methods: {}
 };
 </script>
 

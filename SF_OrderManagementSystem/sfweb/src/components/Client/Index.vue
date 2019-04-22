@@ -72,7 +72,24 @@
 
         <div class="row grid" id="products-showroom">
           <div v-for="(item,index) in products" :key="index">
-              <ProductBlock :product="item" :currency="currency"/>
+            <div class="col-xs-12 col-sm-6 col-md-4 grid-item grid-sizer design">
+              <div class="box">
+                <div class="my__img">
+                  <img src="assets/images/portfolio/work-1.jpg" alt>
+                  <!-- <img :src="item.image" alt> -->
+                </div>
+                <div class="boxContent project_popup">
+                  <router-link :to="{name:'ProductDetail', params:{product_index: index}}">
+                    <div class="display-table">
+                      <div class="display-table-cell">
+                        <span class="post">{{item.category}}</span>
+                        <h3 class="title">{{item.name}}</h3>
+                      </div>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <!--.row-->
@@ -118,18 +135,15 @@
 <script>
 import db from "@/firebase/init";
 import { mapState } from "vuex";
-import { setTimeout } from "timers";
-import ProductBlock from '@/components/Extras/ProductBlock'
+
 export default {
   name: "Index",
   data() {
     return {};
   },
-    components:{
-        ProductBlock,
-    },
+
   computed: {
-    ...mapState(['products','currency'])
+    ...mapState(["products"])
   }
 };
 </script>

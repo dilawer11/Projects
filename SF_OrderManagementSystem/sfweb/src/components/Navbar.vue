@@ -5,8 +5,8 @@
                 <router-link :to="{name:'Index'}">Surgical Fibre Admin Portal</router-link>
                 <ul class="right">
                     <li v-if="!user"><router-link :to="{name:'Login'}">Login</router-link></li>
-                    <li v-if="user"><router-link :to="{name:'ProductsIndex'}">Products</router-link></li>
                     <li v-if="user"><router-link :to="{name:'Dashboard'}">Dashboard</router-link></li>
+                    <li v-if="user"><router-link :to="{name:'ProductsIndex'}">Products</router-link></li>
                     <li v-if="user"><router-link :to="{name:'OrdersIndex'}">Orders</router-link></li>
                     <li v-if="user"><a @click="logout">Logout</a></li>
 

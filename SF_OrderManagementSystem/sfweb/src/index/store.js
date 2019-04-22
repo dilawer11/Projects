@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     products: [1,2,3],
-    currency : 'Rs.'
+    currencySign : 'Rs.',
+    currencyRate : 1,
   },
   getters:{
 
@@ -16,12 +17,8 @@ export default new Vuex.Store({
       state.products=passedProducts
     },
     SET_CURRENCY(state,rate){
-      state.currency='$'
-      state.products.forEach(product=>{
-        product.sizes.forEach(size=>{
-          size.price=size.price*rate
-        })
-      })
+      state.currencySign='$'
+      state.currencyRate=rate
     }
   },
   actions: {

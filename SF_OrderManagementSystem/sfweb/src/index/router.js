@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Index from '@/components/Client/Index'
 import Order from '@/components/Client/Order'
 import Query from '@/components/Client/Query'
+import ProductDetail from '@/components/Extras/ProductDetail'
 
 
 Vue.use(Router)
@@ -26,6 +27,11 @@ const router = new Router({
       name :'Order',
       component: Order
     },
+    {
+      path: '/product/:product_index',
+      name: 'ProductDetail',
+      component: ProductDetail
+    }
   ]
 })
 
