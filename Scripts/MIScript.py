@@ -19,12 +19,12 @@ while(fileExists):
 fileName  = fileName+'.csv'
 f = open(fileName,'w')
 writer = csv.writer(f)
-writer.writerow(['Time(ms)','TOTAL PSS'])
+writer.writerow(['Time(s)','TOTAL PSS'])
 currentTime = 0
-startTime = round(time.time()*1000)
-while(currentTime<5000):
+startTime = round(time.time())
+while(1):
     value = subprocess.run(["adb","shell","dumpsys","meminfo",processName],capture_output=True)
-    currentTime = round(time.time()*1000)-startTime
+    currentTime = round(time.time())-startTime
     valueList = str(value.stdout).split(' ')
     totalPSS = int(valueList[valueList.index('TOTAL')+4])
     writer.writerow([currentTime,totalPSS])
