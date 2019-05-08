@@ -69,6 +69,15 @@ int findProductByName(string name){
 	}
 	return -1;
 }
+void displayLogo(){
+	cout << endl << endl;
+	cout << "	 ,---.  ,--.  ,--. ,-----. ,------.  " << endl;
+	cout << "	'   .-' |  '--'  |'  .-.  '|  .--. ' " << endl;
+	cout << "	`.  `-. |  .--.  ||  | |  ||  '--' | " << endl;
+	cout << "	.-'    ||  |  |  |'  '-'  '|  | --'  " << endl;
+	cout << "	`-----' `--'  `--' `-----' `--'      " << endl;
+	cout << endl;
+}
 void addProduct(){
 	Product temp;
 	cout << "---Add a Product---" << endl;
@@ -83,7 +92,8 @@ void addProduct(){
 }
 void deleteProduct(){
 	string _name;
-	cout << "---Delete a Product---" << endl;
+	displayLogo();
+	cout << "		---Delete a Product---" << endl;
 	cout << "Name : ";
 	cin >> _name;
 	int index = -1;
@@ -108,7 +118,8 @@ void deleteProduct(){
 }
 void addQuantity(){
 	string name;
-	cout << "---Add Quantity---" << endl;
+	displayLogo();
+	cout << "		---Add Quantity---" << endl;
 	cout << "Enter Name : ";
 	cin >> name;
 	int index = findProductByName(name);
@@ -122,7 +133,8 @@ void addQuantity(){
 	}
 }
 void viewProducts(){
-	cout << "---View Products---" <<endl;
+	displayLogo();
+	cout << "		---View Products---" <<endl;
 	if(products.size()){
 		cout << "  NAME     PRICE     QUANTITY"<<endl;
 		for(int i=0;i < products.size();i++){
@@ -132,15 +144,19 @@ void viewProducts(){
 	else{
 		cout << "No Products to be displayed" << endl;
 	}
+	string temp;
+	cout << endl << "Enter any key to continue...";
+	cin >> temp;
 }
 void productManagement(){
 	int choice;
-	cout << "---Products Management---" << endl;
+	displayLogo();
+	cout << "		---Products Management---" << endl;
 	cout << "1 - Add a Product" << endl;
 	cout << "2 - Delete a Product" << endl;
 	cout << "3 - Add Quantity" << endl;
 	cout << "4 - View Products" << endl;
-	cout << "Enter Any Key To Go Back" << endl;
+	cout << "Enter 0 To Go Back" << endl;
 	cout << endl << "--> ";
 	cin >> choice;
 	cout << endl;
@@ -158,8 +174,9 @@ void productManagement(){
 void invoiceGeneration(){ 
 	string name;
 	vector<invoiceEntry> invoiceProducts;
-       	double invoiceTotal = 0;	
-	cout << "---Invoice Generation---" << endl;
+       	double invoiceTotal = 0;
+	displayLogo();	
+	cout << "		---Invoice Generation---" << endl;
 	cout << "Date : " << getDate() << endl;
 	while(name!="0"){
 		cout << "Enter Name(0 for Done): ";
@@ -210,7 +227,8 @@ void viewNotifications(){
 }
 bool displayMenu(){
 	int choice;
-	cout << "---Main Menu----"<< endl;
+	displayLogo();
+	cout << "		---Main Menu----"<< endl;
 	cout << "1 - Product Management" << endl;
 	cout << "2 - Invoice Generation" << endl;
 	cout << "3 - Notifications("<<notifications.size()<<")" << endl;
