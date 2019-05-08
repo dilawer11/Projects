@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 //Structs
@@ -45,6 +46,15 @@ void readProducts(){
 	}
 }
 //File Handling Functions End
+string getDate(){
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer[80];
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	strftime(buffer,sizeof(buffer),"%d-%m-%Y",timeinfo);
+	return buffer;
+}
 void lowQuantityChecker(int index){
 	if(products[index].quantity < MIN_QUANTITY){
 		notifications.push_back("Product : " + products[index].name + " is below min quantity level");
@@ -150,6 +160,7 @@ void invoiceGeneration(){
 	vector<invoiceEntry> invoiceProducts;
        	double invoiceTotal = 0;	
 	cout << "---Invoice Generation---" << endl;
+	cout << "Date : " << getDate() << endl;
 	while(name!="0"){
 		cout << "Enter Name(0 for Done): ";
 		cin >> name;
