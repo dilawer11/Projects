@@ -46,8 +46,8 @@ void readProducts(){
 			getline(linestream,_quantity,',');
 			getline(linestream,_price,',');
 			tempProduct.name = _name;
-			tempProduct.quantity = stoi(_quantity);
-			tempProduct.price  = stod(_price);
+			tempProduct.quantity = stoi(_quantity.c_str());
+			tempProduct.price  = stod(_price.c_str());
 			products.push_back(tempProduct);
 		}
 		//products.pop_back();
