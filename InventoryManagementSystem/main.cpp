@@ -192,7 +192,37 @@ void addQuantity(){
 		cout << "Product Not Found" << endl;
 	}
 }
-
+void editProduct(){
+	string _name;
+	displayLogo();
+	cin.clear();
+	cin.ignore();
+	cout << "		---Edit Product---" << endl;
+	cout << "Enter Name : ";
+	getline(cin,_name);
+	int index = findProductByName(_name);
+	if(index!=-1){
+		double _newPrice;
+		int _newQuantity;
+		string _newName;
+		cout << "Enter New Name : ";
+		getline(cin,_newName);
+		cout << "Enter New Price : ";
+		cin >> _newPrice;
+		cout << "Enter New Quantity : ";
+		cin >> _newQuantity;
+		products[index].name = _newName;
+		products[index].price = _newPrice;
+		products[index].quantity = _newQuantity;
+		cout << "***Product Updated Successfully***" << endl;
+	} else {
+		cout << "Product Not Found" << endl;
+	}
+	string hold;
+	cout << "Enter any key to continue..." << endl;
+	cin >> hold;
+	return;
+}
 void productManagement(){
 	int choice;
 	displayLogo();
@@ -201,6 +231,7 @@ void productManagement(){
 	cout << "2 - Delete a Product" << endl;
 	cout << "3 - Add Quantity" << endl;
 	cout << "4 - View Products" << endl;
+	cout << "5 - Edit Product" << endl;
 	cout << "Enter 0 To Go Back" << endl;
 	cout << endl << "--> ";
 	cin >> choice;
@@ -213,6 +244,8 @@ void productManagement(){
 		addQuantity();
 	} else if(choice==4){
 		viewProducts();
+	} else if(choice==5){
+		editProduct();
 	}
 	return;
 }
