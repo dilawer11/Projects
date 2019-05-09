@@ -117,32 +117,37 @@ void addProduct(){
 	cout << "---Add a Product---" << endl;
 	cout << "Name : " ;
 	getline(cin, temp.name);
-	cout << "Price : ";
-	cin >> temp.price;
-	while(1){
-		if(cin.fail()){
-			cin.clear();
-			cin.ignore();
-			cout << "Please Enter a Positive Number" << endl;
-			cin>> temp.price;
-		} else {
-			break;
+	if(findProductByName(temp.name)!= -1){
+		cout << endl << "Product already exists. If you want to add more quantity use the add quantity option" << endl;
+		
+	} else {
+		cout << "Price : ";
+		cin >> temp.price;
+		while(1){
+			if(cin.fail() || !(temp.price > 0)){
+				cin.clear();
+				cin.ignore();
+				cout << "Please Enter a Positive Number" << endl;
+				cin>> temp.price;
+			} else {
+				break;
+			}
 		}
-	}
-	cout << "Quantity : ";
-	cin >> temp.quantity;
-	while(1){
-		if(cin.fail()){
-			cin.clear();
-			cin.ignore();
-			cout << "Please Enter a Positive Number" << endl;
-			cin>> temp.quantity;
-		} else{
-			break;
+		cout << "Quantity : ";
+		cin >> temp.quantity;
+		while(1){
+			if(cin.fail() || !(temp.quantity>0)){
+				cin.clear();
+				cin.ignore();
+				cout << "Please Enter a Positive Number" << endl;
+				cin>> temp.quantity;
+			} else{
+				break;
+			}
 		}
+		products.push_back(temp);
+		cout << endl <<  "***Product Added Sucessfully***" << endl;
 	}
-	products.push_back(temp);
-	cout << endl <<  "***Product Added Sucessfully***" << endl;
 	return;
 }
 void deleteProduct(){
@@ -208,10 +213,24 @@ void editProduct(){
 		string _newName;
 		cout << "Enter New Name : ";
 		getline(cin,_newName);
+		if(findProductByName(_newName) != -1){
+			cout << endl <<"Product Already Exists" << endl;
+			return;
+		}
 		cout << "Enter New Price : ";
 		cin >> _newPrice;
+		while(!(_newPrice>0)){
+			cout << "Please Enter a Price greater than 0" << endl;
+			cout << "Enter New Price : ";
+			cin >> _newPrice;
+		}
 		cout << "Enter New Quantity : ";
 		cin >> _newQuantity;
+		while(!(_newQuantity > 0)){
+			cout << "Please Enter a Quantity greater than 0" << endl;
+			cout << "Enter New Quantity" << endl;
+			cin >> _newQuantity;
+		}
 		products[index].name = _newName;
 		products[index].price = _newPrice;
 		products[index].quantity = _newQuantity;
