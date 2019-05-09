@@ -281,7 +281,7 @@ void invoiceGeneration(){
 			cout << "Product Not Found" << endl;
 		}
 	}
-	cout << "NAME PRICE QUANTITY TOTAL"<<endl;
+	cout << "	NAME 	     PRICE  QUANTITY 	 TOTAL"<<endl;
 	for(int i = 0 ;i<invoiceProducts.size();i++){
 		products[invoiceProducts[i].index].quantity-=invoiceProducts[i].quantity;
 		string name = products[invoiceProducts[i].index].name;
@@ -289,10 +289,14 @@ void invoiceGeneration(){
 		double price = products[invoiceProducts[i].index].price;
 		double total = price * quantity;
 		invoiceTotal += total;
-		cout<< name << " " << price << " " << quantity << " " << total <<endl;	
+		cout << setw(15) << name << setw(10) << price << setw(10) << quantity << setw(10) << total <<endl;	
 		lowQuantityChecker(invoiceProducts[i].index);
 	}	
-	cout << "TOTAL = " << invoiceTotal << endl;	
+	cout << endl << setw(30)  <<"TOTAL = " << invoiceTotal << endl;	
+	string hold;
+	cout << endl << "Enter any key to continue..." << endl;
+	cin >> hold;
+	return;
 }
 void viewNotifications(){
 	cout << "---Notifications---" << endl;
