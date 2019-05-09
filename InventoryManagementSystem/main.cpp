@@ -2,7 +2,8 @@
 #include <fstream>
 #include <vector>
 #include <ctime>
-
+#include <iomanip>
+#include <sstream>
 using namespace std;
 //Structs
 struct Product{
@@ -28,7 +29,7 @@ void writeProducts(){
 	fout.open(PRODUCT_FILE);
 	if(fout.is_open()){
 		for(int i=0;i<products.size();i++){
-			fout << products[i].name << " " << products[i].quantity << " " << products[i].price << endl;
+			fout << products[i].name << "," << products[i].quantity << "," << products[i].price << endl;
 		}
 		fout.close();
 	}
@@ -37,12 +38,19 @@ void readProducts(){
 	string temp;
 	fin.open(PRODUCT_FILE);
 	if(fin.is_open()){
-		while(!fin.eof()){
-			Product temp;
-			fin >> temp.name >> temp.quantity >> temp.price;
-			products.push_back(temp);
+		while(getline(fin,temp)){
+			string _name,_quantity,_price;
+			Product tempProduct;
+			stringstream linestream(temp);
+			getline(linestream,_name,',');
+			getline(linestream,_quantity,',');
+			getline(linestream,_price,',');
+			tempProduct.name = _name;
+			tempProduct.quantity = stoi(_quantity);
+			tempProduct.price  = stod(_price);
+			products.push_back(tempProduct);
 		}
-		products.pop_back();
+		//products.pop_back();
 	}
 }
 //File Handling Functions End
@@ -71,31 +79,79 @@ int findProductByName(string name){
 }
 void displayLogo(){
 	cout << endl << endl;
-	cout << "	 ,---.  ,--.  ,--. ,-----. ,------.  " << endl;
-	cout << "	'   .-' |  '--'  |'  .-.  '|  .--. ' " << endl;
-	cout << "	`.  `-. |  .--.  ||  | |  ||  '--' | " << endl;
-	cout << "	.-'    ||  |  |  |'  '-'  '|  | --'  " << endl;
-	cout << "	`-----' `--'  `--' `-----' `--'      " << endl;
+//	cout << "	 ,---.  ,--.  ,--. ,-----. ,------.  " << endl;
+//	cout << "	'   .-' |  '--'  |'  .-.  '|  .--. ' " << endl;
+//	cout << "	`.  `-. |  .--.  ||  | |  ||  '--' | " << endl;
+//	cout << "	.-'    ||  |  |  |'  '-'  '|  | --'  " << endl;
+//	cout << "	`-----' `--'  `--' `-----' `--'      " << endl;
+ 	cout << "	 ___                      _                     ____            _                	" << endl; 
+ 	cout << "	|_ _|_ ____   _____ _ __ | |_ ___  _ __ _   _  / ___| _   _ ___| |_ ___ _ __ ___  	" << endl;
+  	cout << "	 | || '_ \\ \\ / / _ \\ '_ \\| __/ _ \\| '__| | | | \\___ \\| | | / __| __/ _ \\ '_ ` _ \\ 	" << endl;	
+  	cout << "	 | || | | \\ V /  __/ | | | || (_) | |  | |_| |  ___) | |_| \\__ \\ ||  __/ | | | | |	" << endl;
+	cout << "	|___|_| |_|\\_/ \\___|_| |_|\\__\\___/|_|   \\__, | |____/ \\__, |___/\\__\\___|_| |_| |_|	" << endl;
+        cout << "             			                 |___/         |___/  				" << endl;
 	cout << endl;
 }
+void viewProducts(){
+	displayLogo();
+	cout << "		---View Products---" <<endl;
+	if(products.size()){
+		cout << "         NAME       PRICE   QUANTITY"<<endl;
+		for(int i=0;i < products.size();i++){
+			cout << setw(15) << products[i].name << setw(10) <<products[i].price << setw(10) <<products[i].quantity << endl;
+		}
+	}
+	else{
+		cout << "No Products to be displayed" << endl;
+	}
+	string temp;
+	cout << endl << "Enter any key to continue...";
+	cin >> temp;
+}
 void addProduct(){
+	cin.clear();
+	cin.ignore();
 	Product temp;
+	temp.name = "";
 	cout << "---Add a Product---" << endl;
-	cout << "Name : ";
-	cin >> temp.name;
+	cout << "Name : " ;
+	getline(cin, temp.name);
 	cout << "Price : ";
 	cin >> temp.price;
+	while(1){
+		if(cin.fail()){
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(),'\n');
+			cout << "Please Enter a Positive Number" << endl;
+			cin>> temp.price;
+		} else {
+			break;
+		}
+	}
 	cout << "Quantity : ";
 	cin >> temp.quantity;
+	while(1){
+		if(cin.fail()){
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(),'\n');
+			cout << "Please Enter a Positive Number" << endl;
+			cin>> temp.quantity;
+		} else{
+			break;
+		}
+	}
 	products.push_back(temp);
+	cout << endl <<  "***Product Added Sucessfully***" << endl;
 	return;
 }
 void deleteProduct(){
 	string _name;
 	displayLogo();
 	cout << "		---Delete a Product---" << endl;
+	cin.clear();
+	cin.ignore();
 	cout << "Name : ";
-	cin >> _name;
+	getline(cin,_name);
 	int index = -1;
 	bool confirm = false;
 	for(int i = 0; i < products.size();i++){
@@ -111,9 +167,13 @@ void deleteProduct(){
 		if(option=="y" || option == "Y"){
 			confirm = true;	
 		}
+	} else {
+		cout << "Product not found" << endl;
 	}
 	if(confirm){
 		products.erase(products.begin()+index);
+		viewProducts();
+		notifications.push_back("Deleted " + products[index].name + " successfully");
 	}
 }
 void addQuantity(){
@@ -132,22 +192,7 @@ void addQuantity(){
 		cout << "Product Not Found" << endl;
 	}
 }
-void viewProducts(){
-	displayLogo();
-	cout << "		---View Products---" <<endl;
-	if(products.size()){
-		cout << "  NAME     PRICE     QUANTITY"<<endl;
-		for(int i=0;i < products.size();i++){
-			cout << products[i].name << " " << products[i].price << " " <<products[i].quantity << endl;
-		}
-	}
-	else{
-		cout << "No Products to be displayed" << endl;
-	}
-	string temp;
-	cout << endl << "Enter any key to continue...";
-	cin >> temp;
-}
+
 void productManagement(){
 	int choice;
 	displayLogo();
@@ -217,12 +262,19 @@ void invoiceGeneration(){
 }
 void viewNotifications(){
 	cout << "---Notifications---" << endl;
-	for(int i = notifications.size(); i >= 0; i--){
-		cout << notifications[i] << endl;
+	if(notifications.size()){		
+		for(int i = notifications.size(); i >= 0; i--){
+			cout << notifications[i] << endl;
+		}
+		while(notifications.size()){
+			notifications.pop_back();
+		}
+	} else {
+		cout << "No Notifications Yet" << endl;
 	}
-	while(notifications.size()){
-		notifications.pop_back();
-	}
+	string hold;
+	cout << endl <<"Enter any key to continue...." << endl;
+	cin >> hold;
 	return;	
 }
 bool displayMenu(){
