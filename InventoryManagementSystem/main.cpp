@@ -122,7 +122,7 @@ void addProduct(){
 	while(1){
 		if(cin.fail()){
 			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(),'\n');
+			cin.ignore();
 			cout << "Please Enter a Positive Number" << endl;
 			cin>> temp.price;
 		} else {
@@ -134,7 +134,7 @@ void addProduct(){
 	while(1){
 		if(cin.fail()){
 			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(),'\n');
+			cin.ignore();
 			cout << "Please Enter a Positive Number" << endl;
 			cin>> temp.quantity;
 		} else{
