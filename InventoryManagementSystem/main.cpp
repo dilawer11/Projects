@@ -4,6 +4,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <cstdlib>
 using namespace std;
 //Structs
 struct Product{
